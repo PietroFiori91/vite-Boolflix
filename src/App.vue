@@ -1,30 +1,51 @@
-<script setup>
-import HelloWorld from './components/HelloWorld.vue'
+<script>
+import axios from "axios";
+import MovieResult from "./components/MovieResult.vue";
+
+export default {
+  components: {
+    MovieResult,
+  },
+  data() {
+    return {
+      searchQuery: "",
+      movies: [],
+    };
+  },
+  methods: {
+    async searchMovies() {
+      try {
+        const response = await axios.get(
+          "https://api.themoviedb.org/3/search/movie?api_key=a78a8b642551188ed870a8264becd909&query=ritorno+al+futuro"
+        );
+        this.movies = response.data.results;
+      } catch (error) {
+        console.error(error);
+      }
+    },
+  },
+};
 </script>
 
 <template>
-  <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
+  <div class="container mt-4">
+    <div class="row justify-content-center">
+      <div class="col-lg-6">
+        <div class="input-group mb-3">
+          <input
+            v-model="searchQuery"
+            type="text"
+            class="form-control"
+            placeholder="Cerca film..."
+          />
+          <button @click="searchMovies" class="btn btn-primary">Cerca</button>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <MovieResult v-for="movie in movies" :key="movie.id" :movie="movie" />
+    </div>
   </div>
-  <HelloWorld msg="Vite + Vue" />
 </template>
 
-<style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
-}
-</style>
+<style scoped></style>
