@@ -12,6 +12,11 @@ export default {
       movies: [],
     };
   },
+  computed: {
+    searchResults() {
+      return this.movies.concat(this.tvShows);
+    },
+  },
   methods: {
     async searchMovies() {
       try {
